@@ -29,3 +29,4 @@ def month_bets(i):
 
 for i in range(1, 25):
     print(month_bets(i))
+    print("\n")
