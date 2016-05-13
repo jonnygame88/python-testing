@@ -27,9 +27,5 @@ def month_bets(i):
     bets.columns = col_names
     return(bets)
 
-bet_table = month_bets(1)
-for i in range(2, 25):
-    bet_table.append(month_bets(i))
-    print(i)
-
-bet_table.to_csv("vht-bets.csv")
+for i in range(1, 25):
+    print(month_bets(i))
