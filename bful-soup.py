@@ -13,7 +13,7 @@ month_links = []
 for link in soup_main.find_all('a'):
     link_url = link.get('href')
     if "record" in link_url or "result" in link_url:
-        month_links.append(link.get('href'))
+        month_links.append(link_url)
 
 ## get monthly results
 for i in range(1, 25):
