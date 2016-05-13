@@ -51,8 +51,6 @@ class Person:
 p = Person('Jonny')
 p.say_hi()
 
-
 name  = "Jonny"
-
 def say_hi():
     print('Hello, my name is', self.name)
