@@ -16,7 +16,7 @@ for link in soup_main.find_all('a'):
         month_links.append(link_url)
 
 ## get monthly results
-for i in range(1, 25):
+def month_bets(i):
     url_month = month_links[len(month_links) - i]
     page_month = urlr.urlopen(url_month)
     soup_month = BeautifulSoup(page_month.read(), "lxml")
@@ -25,4 +25,11 @@ for i in range(1, 25):
     col_names = [i.replace(' ', '') for i in bets[0:7]]
     bets = pd.DataFrame([bets[i:(i + 7)] for i in range(7, len(bets), 7) if '/' in bets[i + 1]])
     bets.columns = col_names
-    print(url_month, len(bets.Profit), pd.DataFrame.sum(pd.to_numeric(bets.Profit)))
+    return(bets)
+
+bet_table = month_bets(1)
+for i in range(2, 25):
+    bet_table.append(month_bets(i))
+    print(i)
+
+bet_table.to_csv("vht-bets.csv")
