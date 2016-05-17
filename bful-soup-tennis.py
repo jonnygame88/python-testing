@@ -1,4 +1,3 @@
-
 from bs4 import BeautifulSoup
 import urllib.request as urlr
 import pandas as pd
@@ -14,11 +13,20 @@ for link in soup_player.find_all('a'):
     if "gameinfo" in link_url and link_url not in match_links:
         match_links.append(link_url)
 
+## get match info
+def match_info(soup_match):
+    s = soup_match.findAll('div', attrs = {'class': 'block'})[0]
+    date = s.findAll('div', attrs = {'class': 'calendar'})[0].get_text().replace('\n', ' ')
+    tourn = s.h2.get_text()
+    surface = s.findAll('span', attrs = {'class': 'maininfo'})[0].get_text()
+    round = s.findAll('td', attrs = {'class': 'round'})[0].get_text()
+    players = [x.get_text() for x in s.findAll('acronym', {"title": True})]
+    sets = [x.get_text() for x in s.findAll('td', attrs = {'class': 'set'})]
+    return(date, tourn, surface, round, 
+           [x for x in players if len(x)>0], [x for x in sets if len(x)>0])
+
 ## get match stats
-def match_stats(n):
-    url_match = match_links[n]
-    page_match = urlr.urlopen(url_match)
-    soup_match = BeautifulSoup(page_match.read(), "lxml")
+def match_stats(soup_match):
     gs = soup_match.findAll('table', attrs = {'class': 'gamestats'})[0].tbody
     gs_title = gs.findAll(attrs = {'class': 'title'})
     gs_val = gs.findAll(attrs = {'class': 'value'})
@@ -27,16 +35,9 @@ def match_stats(n):
     t_entries = [[t_metrics[i], t_vals[2*i], t_vals[2*i + 1]] for i in range(14)]
     return(pd.DataFrame(t_entries, columns = ['metric', 'player1', 'player2']))
 
+## output
 for n in range(len(match_links)):
-    print(match_stats(n))
-    print("\n")
-
-## get: date, tournament, surface, round, player1, player2, set score
-url_match = match_links[0]
-page_match = urlr.urlopen(url_match)
-soup_match = BeautifulSoup(page_match.read(), "lxml")
-s = soup_match.findAll('div', attrs = {'class': 'block'})[0]
-
-print(s.findAll('div', attrs = {'class': 'calendar'})[0].get_text())
-print(s.findAll('span', attrs = {'class': 'maininfo'})[0].get_text())
-print(s.findAll('td', attrs = {'class': 'set'}))
+    url_match = match_links[n]
+    page_match = urlr.urlopen(url_match)
+    s = BeautifulSoup(page_match.read(), "lxml")
+    print(match_info(s), '\n\n', match_stats(s), '\n')
