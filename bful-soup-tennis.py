@@ -1,7 +1,6 @@
 
 from bs4 import BeautifulSoup
 import urllib.request as urlr
-import numpy as np
 import pandas as pd
 pd.set_option('display.width', 1000)
 
@@ -31,3 +30,13 @@ def match_stats(n):
 for n in range(len(match_links)):
     print(match_stats(n))
     print("\n")
+
+
+url_match = match_links[0]
+page_match = urlr.urlopen(url_match)
+soup_match = BeautifulSoup(page_match.read(), "lxml")
+s = soup_match.findAll('div', attrs = {'class': 'block'})[0]
+
+print(s.findAll('div', attrs = {'class': 'calendar'})[0].get_text())
+print(s.findAll('span', attrs = {'class': 'maininfo'})[0].get_text())
+print(s.findAll('td', attrs = {'class': 'set'}))
