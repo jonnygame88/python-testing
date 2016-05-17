@@ -31,7 +31,7 @@ for n in range(len(match_links)):
     print(match_stats(n))
     print("\n")
 
-
+# date, tournament, surface, round, player1, player2
 url_match = match_links[0]
 page_match = urlr.urlopen(url_match)
 soup_match = BeautifulSoup(page_match.read(), "lxml")
